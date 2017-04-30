@@ -1,0 +1,15 @@
+def compilerPlugin = project(':compiler-plugin')
+
+evaluationDependsOn(":$compilerPlugin.name")
+
+apply plugin: 'kotlin'
+
+compileKotlin.kotlinOptions.freeCompilerArgs = ['-Xplugin', new File(compilerPlugin.buildDir, "libs/${compilerPlugin.name}.jar")]
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+afterEvaluate {
+    tasks["compileKotlin"].dependsOn += compilerPlugin.tasks["jar"]
+}
